@@ -1,0 +1,15 @@
+
+import os
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
+
+MAX_SIGNALS_PER_DAY = 20
+
+MIN_SCORE = 85
+INVEST_SCORE = 92
+
+ATR_SL_OIL = 1.5
+ATR_TP_OIL = 3.2
+
+STATS_FILE = "trade_stats.csv"
