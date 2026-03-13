@@ -1,37 +1,33 @@
+import yfinance as yf
 import pandas as pd
-import requests
-from io import StringIO
-
-SYMBOL_MAP = {
-    "crudeoil": "cl.f"
-}
 
 def get_data(asset):
 
     try:
 
-        symbol = SYMBOL_MAP[asset]
+        # Crude Oil Futures
+        ticker = "CL=F"
 
-        url = f"https://stooq.com/q/d/l/?s={symbol}&i=5"
+        data = yf.download(
+            ticker,
+            period="1d",
+            interval="5m",
+            progress=False
+        )
 
-        headers = {
-            "User-Agent": "Mozilla/5.0"
-        }
-
-        r = requests.get(url, headers=headers)
-
-        if r.status_code != 200:
+        if data.empty:
             return None
 
-        if not r.text or "html" in r.text.lower():
-            return None
+        data = data.reset_index()
 
-        df = pd.read_csv(StringIO(r.text))
+        df = pd.DataFrame()
 
-        if df.empty:
-            return None
-
-        df.columns = ["date","open","high","low","close","volume"]
+        df["date"] = data["Datetime"]
+        df["open"] = data["Open"]
+        df["high"] = data["High"]
+        df["low"] = data["Low"]
+        df["close"] = data["Close"]
+        df["volume"] = data["Volume"]
 
         return df.tail(200)
 
