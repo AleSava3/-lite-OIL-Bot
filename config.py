@@ -6,7 +6,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 MAX_SIGNALS_PER_DAY = 20
 
 # score minimo più flessibile
-MIN_SCORE = 80
+MIN_SCORE = 65
 
 # segnali top
 INVEST_SCORE = 92
