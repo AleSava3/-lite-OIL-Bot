@@ -1,11 +1,18 @@
-
 import pandas as pd
 import requests
 from io import StringIO
 
+# =====================
+# SYMBOL MAP
+# =====================
+
 SYMBOL_MAP = {
-"crudeoil":"usdtoil"
+    "crudeoil": "cl.f"
 }
+
+# =====================
+# DATA DOWNLOAD
+# =====================
 
 def get_data(asset):
 
@@ -15,16 +22,32 @@ def get_data(asset):
 
         url = f"https://stooq.com/q/d/l/?s={symbol}&i=5"
 
-        r = requests.get(url)
+        response = requests.get(url)
 
-        if r.status_code != 200:
+        if response.status_code != 200:
             return None
 
-        df = pd.read_csv(StringIO(r.text))
+        df = pd.read_csv(StringIO(response.text))
 
-        df.columns = ["date","open","high","low","close","volume"]
+        if df.empty:
+            return None
 
-        return df.tail(200)
+        df.columns = [
+            "date",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume"
+        ]
 
-    except:
+        # prendiamo le ultime 200 candele
+        df = df.tail(200)
+
+        return df
+
+    except Exception as e:
+
+        print("Data error:", e)
+
         return None
